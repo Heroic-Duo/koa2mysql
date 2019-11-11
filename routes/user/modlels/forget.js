@@ -3,7 +3,7 @@
  */
 
 const tools = require('../../../models/tools/mds.js');
-const userModel = require('../../../db/mysql/user');
+const userModel = require('../../../db/mysql/mysql');
 // const {User} = require('./db.js');
 const jwt = require('jsonwebtoken');
 const svgCaptcha = require('svg-captcha');
@@ -31,12 +31,16 @@ class index {
             if (user.emailCode == ctx.session.emailCode) {
                 // let res = await  userModel.insertData([user.email, tools.md5(user.password) ])
                 if (user.email === ctx.session.emailFot) {
-                    let result = await userModel.findDataByName(user.email)
+                    let _sql = `SELECT * from users where email="${user.email}"`
+                    let result =  await userModel.query(_sql)   
+                    // let result = await userModel.findDataByName(user.email)
 
                     if (result.length) {
-                        await userModel.updatePass([tools.md5(user.password),user.email])
+                        console.log(result,'sssssssssssssss')
+                        let _sql = `update users set password="${tools.md5(user.password)}" where email="${user.email}"`
+                        await userModel.query(_sql)
                         .then(res=>{
-                           
+                           console.log(res,'sssssssssssssss')
                             ctx.body = {       
                                 code: 200,
                                 message: '更新成功',
@@ -145,7 +149,7 @@ class index {
                 if (sendEmail) {
                     //定时器
                     ctx.body = {
-                        message: "成功",
+                        message: "发送成功",
                         status: true,
                     }
                 } else {

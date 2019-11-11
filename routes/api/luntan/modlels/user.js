@@ -3,7 +3,7 @@
  */
 
 const tools = require('./../../../../models/tools/mds.js');
-const userModel = require('../../../../db/mysql/luntan');
+const userModel = require('../../../../db/mysql/mysql');
 // const {User} = require('./db.js');
 const jwt = require('jsonwebtoken');
 const svgCaptcha = require('svg-captcha');

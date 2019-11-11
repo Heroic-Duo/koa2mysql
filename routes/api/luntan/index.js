@@ -20,17 +20,17 @@ router.post('/xueJia/index', xueJia.index);
 router.post('/xueJia/list', xueJia.list);
 router.post('/xueJia/details', xueJia.details);
 
-// router.post('/zhongYang/index', zhongYang.index);
-// router.post('/zhongYang/list', zhongYang.list);
-// router.post('/zhongYang/details', zhongYang.details);
+router.post('/zhongYang/index', zhongYang.index);
+router.post('/zhongYang/list', zhongYang.list);
+router.post('/zhongYang/details', zhongYang.details);
 
-// router.post('/shiWu/index', shiWu.index);
-// router.post('/shiWu/list', shiWu.list);
-// router.post('/shiWu/details', shiWu.details);
+router.post('/shiWu/index', shiWu.index);
+router.post('/shiWu/list', shiWu.list);
+router.post('/shiWu/details', shiWu.details);
 
-// router.post('/qqsh/index', qqsh.index);
-// router.post('/qqsh/list', qqsh.list);
-// router.post('/qqsh/details', qqsh.details);
+router.post('/qqsh/index', qqsh.index);
+router.post('/qqsh/list', qqsh.list);
+router.post('/qqsh/details', qqsh.details);
 
 // router.post('/list/index', list.index);
 // router.post('/list/list', list.list);

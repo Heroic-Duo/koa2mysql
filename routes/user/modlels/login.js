@@ -3,7 +3,7 @@
  */
 
 const tools = require('../../../models/tools/mds.js');
-const userModel = require('../../../db/mysql/user');
+const userModel = require('../../../db/mysql/mysql');
 // const {User} = require('./db.js');
 const jwt = require('jsonwebtoken');
 const svgCaptcha = require('svg-captcha');
@@ -32,10 +32,12 @@ class index {
             }
             
         } else if (user.code.toLocaleLowerCase() === ctx.session.code.toLocaleLowerCase()) {
-            let res=await userModel.findDataByName(user.email)
+            // let res=await userModel.findDataByName(user.email)
             // console.log(tools.md5(user.password),'aaaaaaaaaa')
+            let _sql = `SELECT * from users where email="${user.email}"`
+            let res =  await userModel.query(_sql)   
             if (res.length) {
-                if (res[0].pass === tools.md5(user.password)) {
+                if (res[0].password === tools.md5(user.password)) {
                  const token = jwt.sign({ user: user.email, password: user.password }, secret, { expiresIn: '1h' })  //token签名 有效期为1小时
                     ctx.body = {
                         message: '登录成功',

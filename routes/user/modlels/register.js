@@ -3,7 +3,7 @@
  */
 
 const tools = require('../../../models/tools/mds.js');
-const userModel = require('../../../db/mysql/user');
+const userModel = require('../../../db/mysql/mysql');
 // const {User} = require('./db.js');
 const jwt = require('jsonwebtoken');
 const svgCaptcha = require('svg-captcha');
@@ -21,6 +21,7 @@ class index {
             password: ctx.request.body.password,
             repeatpass: ctx.request.body.repeatpass,
             code: ctx.request.body.code,
+            nickname:ctx.request.body.nickname,
             emailCode: ctx.request.body.emailCode,
             time:moment().format('YYYY-MM-DD HH:mm'),
         }
@@ -32,10 +33,9 @@ class index {
             };
         } else if (user.code.toLocaleLowerCase() == ctx.session.rscode.toLocaleLowerCase()) {
             if (user.emailCode == ctx.session.emailCode) {
-                // let res = await  userModel.insertData([user.email, tools.md5(user.password) ])
                 if (user.email === ctx.session.emailReg) {
-                    let result = await userModel.findDataByName(user.email,time)
-
+                    let _sql = `SELECT * from users where email="${user.email}"`
+                    let result =  await userModel.query(_sql)   
                     if (result.length) {
                         ctx.body = {       
                             code: 304,
@@ -43,14 +43,13 @@ class index {
                             status: 304
                         };
                     } else {
-                        let res = await userModel.insertData([user.email, tools.md5(user.password)])
-                        console.log(res.insertId)
-                        await userModel.findDataByName(user.email,time)
+
+                        let  inData= `insert into users(email,password,nickname,created_time) values("${user.email}","${ tools.md5(user.password)}","${user.nickname}","${user.time}")`
+                        await userModel.query(inData)
+                        await userModel.findDataByName(user.email)
                             .then((result) => {
                                 if (result.length) {
-                                    // ctx.session.id = res.insertId;
-                                    // ctx.session.user = user.email;
-                                    // ctx.session.avator = 'default.jpg';
+                                 
                                     ctx.body = {
                                         code: 200,
                                         message: '注册成功',
@@ -80,7 +79,7 @@ class index {
             } else {
                 ctx.body = {
                     code: 302,
-                    message: '邮箱验证码错误',
+                    message: '邮箱验证码与邮箱不匹配',
                     status: 302
                 }
 
@@ -98,11 +97,9 @@ class index {
 
     }
     async email(ctx, next) {
-
-
         let email = ctx.request.body.email;
         let code = ctx.request.body.code;
-
+        console.log(ctx.request.body.code, 'loooooo')
         let usercode = Math.ceil(Math.random() * 100000)
         ctx.session.emailCode = usercode
         console.log(ctx.session.emailCode, 'loooooo')
@@ -126,8 +123,11 @@ class index {
             return;
         }
         if (code.toLocaleLowerCase() == ctx.session.rscode.toLocaleLowerCase()) {
+            // let _sql = `SELECT * from users where email="${name}"`
             let users = await userModel.findDataByName(email)
+            console.log(users,'pppppppp')
             if (users.length) {
+                console.log(users,'pppppppp')
                 ctx.body = {
                     message: "已注册",
                     status: 304,
@@ -137,7 +137,7 @@ class index {
                 if (sendEmail) {
                     //定时器
                     ctx.body = {
-                        message: "成功",
+                        message: "发送成功",
                         status: true,
                     }
                 } else {

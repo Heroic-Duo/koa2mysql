@@ -3,11 +3,13 @@ const Koa=require('koa'),
     router = require('koa-router')(),
     path=require('path'),
     render = require('koa-art-template'),
-    static = require('koa-static'),
+   
     session = require('koa-session'),
     jsonp = require('koa-jsonp'),
     bodyParser = require('koa-bodyparser'),
+     static = require('koa-static'),
     logger = require('koa-logger'),
+     koaBody = require('koa-body'),
     cors = require('koa2-cors'),
     historyApiFallback = require('koa2-connect-history-api-fallback'),
     jwt = require('jsonwebtoken'),
@@ -43,7 +45,22 @@ app.use((ctx, next) => {
       }
   });
 });
-
+// app.use(koaBody());
+app.use(koaBody({
+  // 支持文件格式
+  multipart: true,
+  formidable: {
+      // 上传目录
+      uploadDir: path.join(__dirname, 'public/uploads'),
+      // 保留文件扩展名
+      keepExtensions: true,
+      onFileBegin:(name,file) => { // 文件上传前的设置
+        // console.log(`name: ${name}`);
+        // console.log(file);
+       
+      },
+  }
+}));
 //配置post提交数据的中间件
 app.use(bodyParser());
 
@@ -79,7 +96,7 @@ render(app, {
 });
 app.use(cors());
 //配置 静态资源的中间件
-app.use(static(__dirname + '/public'));
+app.use(static(path.join(__dirname, 'public')));
 
 
 // logger

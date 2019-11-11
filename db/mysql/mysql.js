@@ -2,8 +2,8 @@
 
 //import { create } from 'domain';
 
-// var mysql = require('mysql');
-// var config = require('../config/default.js')
+const mysql = require('mysql');
+const { config } = require('../../models/config/default')
 //建立数据库连接池
 var pool = mysql.createPool({
     host: config.database.HOST,
@@ -28,21 +28,27 @@ let query = function(sql, values) {
                                           //query用来操作数据库表
                 })
             }
-         console.log('2222222222222222222222222222222')
+         console.log('12')
     })
     })
 }
  
 var users = `create table if not exists users(
     id INT(200) NOT NULL AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    pass VARCHAR(40) NOT NULL,
-    avator VARCHAR(100) DEFAULT 'default.jpg', 
-    job VARCHAR(40),
-    company VARCHAR(40),
-    introdu VARCHAR(255),
-    userhome VARCHAR(100),
-    github VARCHAR(100),
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(40) NOT NULL,
+    nickname VARCHAR(40) NOT NULL,
+    avator VARCHAR(100) DEFAULT 'default.jpg',
+    created_time VARCHAR(40) NOT NULL,
+    last_modified_time VARCHAR(40),
+    bio VARCHAR(40),
+    sex INT(200) ,
+    age INT(200) ,
+    experience INT(200) ,
+    prestige INT(200) ,
+    prestigeRank INT(200) ,
+    experienceRank INT(200) ,
+    status INT(200) ,
     PRIMARY KEY (id)
 );`
 
@@ -67,6 +73,7 @@ var posts = `create table if not exists posts(
 
 var comment= `create table if not exists comment(
  id INT(200) NOT NULL AUTO_INCREMENT,
+ uid VARCHAR(100) NOT NULL,
  name VARCHAR(100) NOT NULL,
  content TEXT NOT NULL,
  moment VARCHAR(40) NOT NULL,
@@ -81,6 +88,7 @@ var likes = `create table if not exists likes(
     id INT(200) NOT NULL AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     postid INT(200) NOT NULL,
+    uid VARCHAR(100) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (postid) REFERENCES posts(id)
     ON DELETE CASCADE
@@ -134,7 +142,7 @@ createTable(follow);
 //createTable(follower);
 //注册用户
 let insertData = function(value){
-    let _sql = "insert into users(name,pass) values(?,?);"
+    let _sql = "insert into users(email,password,nickname) values(?,?,?);"
     return query(_sql,value);
 }
 //更新头像
@@ -225,7 +233,7 @@ let findCollectPostByUid = function(uid){
 
 //通过名字查找用户
 let findDataByName = function(name){
-    let _sql = `SELECT * from users where name="${name}"`
+    let _sql = `SELECT * from users where email="${name}"`
     return query(_sql);
 }
 

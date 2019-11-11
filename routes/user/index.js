@@ -1,11 +1,19 @@
 const router = require('koa-router')();
 const forget = require('./modlels/forget');
 const login = require('./modlels/login');
-const register = require('./modlels/forget');
+const register = require('./modlels/register');
+const user = require('./modlels/user');
 router.get('/',async (ctx)=>{
     ctx.body='1sssssssss'
 })
-// router.post('/forget', forget.index);
+
+
+
+router.post('/user/updata', user.upData);
+router.post('/user/upImg', user.upImg);
+
+
+
 
 router.get('/forget/code', forget.code);
 router.post('/forget/email', forget.email);

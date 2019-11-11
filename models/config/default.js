@@ -12,14 +12,14 @@
 //     }
 // }
 
-const configUser = {
+const config = {
     //数据库配置  用户
     database: {
-        DATABASE: 'users',
+        DATABASE: 'koa',
         USERNAME: 'mysql',
         PASSWORD: '123456',
         PORT: '3306',
-        HOST: '192.168.116.128'
+        HOST: '192.168.182.128'
     }
 }
 
@@ -27,11 +27,11 @@ const luntan = {
     
     //数据库配置  论坛
     database: {
-        DATABASE: 'luntan1',
+        DATABASE: 'luntan',
         USERNAME: 'mysql',
         PASSWORD: '123456',
         PORT: '3306',
-        HOST: '192.168.116.128'
+        HOST: '192.168.182.128'
     }
 }
 
@@ -47,4 +47,4 @@ const shu = {
     }
 }
 
-module.exports = {configUser,luntan,shu}  
+module.exports = {config,luntan,shu}  
